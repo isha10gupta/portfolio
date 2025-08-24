@@ -62,24 +62,23 @@
       transition: all 0.25s ease;
     }
     .leet-btn:hover { background: #ffdb4d; }
-/* Contact Info Links */
-.contact-info a {
-  color: var(--brand);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
 
-.contact-info a:hover {
-  color: var(--brand-2);
-  text-decoration: underline;
-}
-
-.contact-info p {
-  margin: 6px 0;
-  font-size: 15px;
-  color: var(--text); /* ensures text is visible */
-}
+    /* Contact Info Links */
+    .contact-info a {
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .contact-info a:hover {
+      color: var(--brand-2);
+      text-decoration: underline;
+    }
+    .contact-info p {
+      margin: 6px 0;
+      font-size: 15px;
+      color: var(--text);
+    }
 
     /* Skills Icons Grid */
     .skills-icons {
@@ -137,15 +136,20 @@
     .project-title.active span { transform: rotate(90deg); }
     
     .project-content {
-      display: none;
-      padding: 14px;
-      margin-top: 6px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+      padding: 0 14px;
       background: var(--card);
       border-radius: 12px;
-      animation: fadeIn 0.3s ease-in-out;
+    }
+    .project-content.open {
+      opacity: 1;
+      padding: 14px;
+      max-height: 400px; /* enough to fit content */
     }
     .project-content p { margin: 6px 0; }
-    @keyframes fadeIn { from {opacity:0;transform:translateY(-4px);} to {opacity:1;transform:translateY(0);} }
 
     /* Contact */
     form { display: grid; gap: 16px; max-width: 600px; margin: 0 auto; }
@@ -154,18 +158,13 @@
     textarea { resize: vertical; min-height: 120px; }
 
     .contact-info { margin-top: 20px; text-align: center; }
-    .contact-info p { margin: 6px 0; }
-
     footer { padding: 30px 28px; border-top: 1px solid rgba(255,255,255,.08); text-align: center; color: var(--muted); }
   </style>
 </head>
 <body>
   <header>
     <div class="nav">
-      <div>
-       
- 
-      </div>
+      <div class="logo">Isha Gupta</div>
       <nav class="nav-links">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
@@ -177,12 +176,10 @@
 
   <!-- About -->
   <section id="about">
-    
     <div class="about-section">
       <div class="about-photo">
         <h2>Isha Gupta</h2>
         <img src="photo.jpeg" alt="Isha Gupta" />
-        
       </div>
       <div class="about-text">
         <p>Hi, I’m <strong>Isha Gupta</strong>, a Computer Science undergrad at <strong>M.S. Ramaiah Institute of Technology</strong> (Bengaluru).
@@ -196,15 +193,12 @@
   <section id="skills">
     <h2>Skills & Problem Solving</h2>
 
-    <!-- Problem Solving Card -->
     <div class="leet-card">
-     
       <p>I have strong problem-solving skills and enjoy tackling algorithmic challenges on platforms like LeetCode. 
          I actively solve Data Structures and Algorithms (DSA) problems, improving my logical thinking and coding efficiency.</p>
       <a href="https://leetcode.com/u/_ISHA_GUPTA_/" target="_blank" class="leet-btn"> Visit My LeetCode</a>
     </div>
 
-    <!-- Skills Icons Grid -->
     <div class="skills-icons">
       <div><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C"/><p>C</p></div>
       <div><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++"/><p>C++</p></div>
@@ -275,26 +269,31 @@
     </div>
   </section>
 
- 
+  <footer>
+    <p>© <span id="year"></span> Isha Gupta</p>
+  </footer>
 
   <script>
-    document.getElementById('year').textContent=new Date().getFullYear();
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Accordion toggle
+    // Accordion toggle with animation
     const projectBtns = document.querySelectorAll(".project-title");
     projectBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         const content = btn.nextElementSibling;
-        const arrow = btn.querySelector("span");
 
-        // Close all
-        document.querySelectorAll(".project-content").forEach(c => c.style.display="none");
-        document.querySelectorAll(".project-title").forEach(b => b.classList.remove("active"));
+        if (btn.classList.contains("active")) {
+          // Close if already open
+          btn.classList.remove("active");
+          content.classList.remove("open");
+        } else {
+          // Close all others
+          document.querySelectorAll(".project-title").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".project-content").forEach(c => c.classList.remove("open"));
 
-        // Toggle selected
-        if (content.style.display !== "block") {
-          content.style.display="block";
+          // Open this one
           btn.classList.add("active");
+          content.classList.add("open");
         }
       });
     });
